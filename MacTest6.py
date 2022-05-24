@@ -77,7 +77,7 @@ class Note_Window(QDialog):
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setStyleSheet(f'QWidget {{background-color: {self.BG_Color}; font-size: 14pt; color: {self.FG_Color};}}')
         self.pressing = False
-        self.Get_Settings()
+        #self.Get_Settings()
 
 class MyBar(QWidget):
 
