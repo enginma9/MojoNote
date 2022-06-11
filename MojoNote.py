@@ -123,7 +123,7 @@ class Note_Window(QDialog):
         self.setWindowTitle("MacTest")
         self.setWindowOpacity(0.9)
         self.Main_Layout.addWidget( MyBar( self ) )
-        self.Note_Area = QTextEdit("Enter text here.")
+        self.Note_Area = QPlainTextEdit("Enter text here.")
         self.Main_Layout.addWidget( self.Note_Area )
         self.Note_Area.setStyleSheet('border: none; font: 12px Arial;')
         self.setLayout(self.Main_Layout)
@@ -133,6 +133,8 @@ class Note_Window(QDialog):
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setStyleSheet(f'QWidget {{background-color: {self.BG_Color}; font-size: 12pt; color: {self.FG_Color};}}')
         self.pressing = False
+        self.sizegrip = QSizeGrip(self)
+        self.Main_Layout.addWidget(self.sizegrip, 0, Qt.AlignBottom | Qt.AlignRight)
 
 class MyBar(QWidget):
 
@@ -156,7 +158,7 @@ class MyBar(QWidget):
         self.Restore_btn.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
 
         self.Roll_Up_btn = QPushButton("-", flat=True)
-        self.Roll_Up_btn.clicked.connect(self.change_background)
+        #self.Roll_Up_btn.clicked.connect(self.change_background)
         self.Roll_Up_btn.setFixedSize(btn_size,btn_size)
         self.Roll_Up_btn.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
 
@@ -223,42 +225,82 @@ class MyBar(QWidget):
     def change_background(self):
         self.change_Background("\#ffffff")
         self.change_Foreground("\#000000")
+        self.update_formatting()
 
     def change_Foreground(self, FG):
         self.parent.FG_Color = FG
-        self.parent.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 14pt; color: {self.parent.FG_Color};}}")
-        self.title.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
-        self.Menu_Button.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
-        self.Restore_btn.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
-        self.Roll_Up_btn.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
-        self.Max_Button.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
 
     def change_Background(self, BG):
         self.parent.BG_Color = BG
+
+    def update_formatting(self):
         self.parent.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
         self.title.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
         self.Menu_Button.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
         self.Restore_btn.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
         self.Roll_Up_btn.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
         self.Max_Button.setStyleSheet(f"QWidget {{background-color: {self.parent.BG_Color}; font-size: 10pt; color: {self.parent.FG_Color};}}")
-        print( self.parent.BG_Color, self.parent.FG_Color, self.parent.pressing)
+        #print( self.parent.BG_Color, self.parent.FG_Color, self.parent.pressing)
 
 class Pref_Window(QDialog):
 
-    BG_Color = "\#000000"
-    FG_Color = "\#ffffff"
-    Title = "Preferences"
-
-
     def __init__(self):
         super().__init__()
+        self.BG_Color = "\#000000"
+        self.FG_Color = "\#ffffff"
+        self.Title = "Preferences"
         self.Main_Layout  = QVBoxLayout()
         self.Main_Layout.setContentsMargins(0,0,0,0)
         self.setWindowTitle("MacTest")
         self.setWindowOpacity(0.9)
         self.Main_Layout.addWidget( Pref_Bar( self ) )
-        #self.Note_Area = QTextEdit("Enter text here.")
-        #self.Main_Layout.addWidget( self.Note_Area )
+
+        self.Title_Label = QLabel("Title:")
+        self.Main_Layout.addWidget( self.Title_Label )
+        self.Title_Edit = QLineEdit()
+        self.Main_Layout.addWidget( self.Title_Edit )
+        self.Font_Label = QLabel("Font Size:")
+        self.Main_Layout.addWidget( self.Font_Label )
+        self.Font_Edit = QLineEdit()
+        self.Main_Layout.addWidget( self.Font_Edit )
+
+        self.Position_Label_1 = QLabel("Position X:")
+        self.Main_Layout.addWidget( self.Position_Label_1 )
+        self.Position_x_Edit = QLineEdit()
+        self.Main_Layout.addWidget( self.Position_x_Edit )
+        self.Position_Label_2 = QLabel("Position Y:")
+        self.Main_Layout.addWidget( self.Position_Label_2 )
+        self.Position_y_Edit = QLineEdit()
+        self.Main_Layout.addWidget( self.Position_y_Edit )
+
+        self.Size_Label_1 = QLabel("Size X:")
+        self.Main_Layout.addWidget( self.Size_Label_1 )
+        self.Size_x_Edit = QLineEdit()
+        self.Main_Layout.addWidget( self.Size_x_Edit )
+        self.Size_Label_2 = QLabel("Size Y:")
+        self.Main_Layout.addWidget( self.Size_Label_2 )
+        self.Size_y_Edit = QLineEdit()
+        self.Main_Layout.addWidget( self.Size_y_Edit )
+
+        self.BG_Color_Label = QLabel("Background Color:")
+        self.Main_Layout.addWidget( self.BG_Color_Label )
+        self.BG_Color_Edit = QLineEdit()
+        self.Main_Layout.addWidget( self.BG_Color_Edit )
+        self.FG_Color_Label = QLabel("Font Color: (Omit #, only enter 6 digits)")
+        self.Main_Layout.addWidget( self.FG_Color_Label )
+        self.FG_Color_Edit = QLineEdit()
+        self.Main_Layout.addWidget( self.FG_Color_Edit )
+
+        self.Button_Layout = QHBoxLayout()
+        self.Refresh_Button = QPushButton("Refresh")
+        self.Button_Layout.addWidget( self.Refresh_Button )
+        #self.Refresh_Button.clicked.connect(self.Refresh_Button_clicked)
+        self.Set_Button = QPushButton("Set")
+        self.Button_Layout.addWidget( self.Set_Button )
+        #self.Set_Button.clicked.connect(self.Set_Button_clicked)
+        self.Main_Layout.addLayout( self.Button_Layout )
+
+
         #self.Note_Area.setStyleSheet('border: none; font: 12px Arial;')
         self.setLayout(self.Main_Layout)
         self.Main_Layout.setContentsMargins(0,0,0,0)
@@ -303,9 +345,6 @@ class Pref_Bar(QWidget):
         self.title.setAlignment(Qt.AlignCenter)
         self.Bar_Layout.addWidget(self.Menu_Button)
         self.Bar_Layout.addWidget(self.title)
-        #self.Bar_Layout.addWidget(self.Roll_Up_btn)
-        #self.Bar_Layout.addWidget(self.Restore_btn)
-        #self.Bar_Layout.addWidget(self.Max_Button)
 
         self.title.setStyleSheet("""
             color: white;
